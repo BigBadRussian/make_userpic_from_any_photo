@@ -18,7 +18,7 @@ def split_image():
 
 
 def make_red_part():
-    red_image, green_image, blue_image = split_image()
+    red_image = split_image()[0]
     crop_coordinates_left_red = (int(red_image.width * 0.1), 0, red_image.width, red_image.height)
     crop_coordinates_middle_red = (int(red_image.width * 0.05), 0, int(red_image.width * 0.95), red_image.height)
     red_image_left = red_image.crop(crop_coordinates_left_red)
@@ -28,7 +28,7 @@ def make_red_part():
 
 
 def make_blue_part():
-    red_image, green_image, blue_image = split_image()
+    blue_image = split_image()[2]
     crop_coordinates_right_blue = (0, 0, int(blue_image.width * 0.9), blue_image.height)
     crop_coordinates_middle_blue = (int(blue_image.width * 0.05), 0, int(blue_image.width * 0.95), blue_image.height)
     blue_image_right = blue_image.crop(crop_coordinates_right_blue)
@@ -38,7 +38,7 @@ def make_blue_part():
 
 
 def make_green_part():
-    red_image, green_image, blue_image = split_image()
+    green_image = split_image()[1]
     crop_coordinates_green = (int(green_image.width * 0.05), 0, int(green_image.width * 0.95), green_image.height)
     green_cropped = green_image.crop(crop_coordinates_green)
     return green_cropped
