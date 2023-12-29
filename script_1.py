@@ -1,24 +1,32 @@
 from PIL import Image
 
 
-def prepare_image():
-    image = Image.open("photo.jpg")
-    if image.mode == "CMYK":
-        image = image.convert("RGB")
-    width = 50 * round(image.width / 50)
-    height = 50 * round(image.height / 50)
-    new_size = (width, height)
-    image = image.resize(new_size)
-    return image
+def prepare_image(filename=None):
+    """Функция подготавливает изображение к преобразованиям.
+    В базовом виде, по заданию, код сдвигает на абсолютное значение, и результат на картинках
+    с высоким разрешением будет малозаметен. Так, как количество писклей должно быть целым,
+    задачей функции является необходимое и достаточное изменение размера исхзодного изображения до размеров, кратных 50
+    """
+    if filename:
+        image = Image.open(filename)
+        if image.mode == "CMYK":
+            image = image.convert("RGB")
+        width = 50 * round(image.width / 50)
+        height = 50 * round(image.height / 50)
+        new_size = (width, height)
+        image = image.resize(new_size)
+        return image
+    if not filename:
+        return None
 
 
-def split_image():
-    red_image, green_image, blue_image = prepare_image().split()
-    return red_image, green_image, blue_image
+#def split_image():
+#    if prepare_image():
+#        red_image, green_image, blue_image = prepare_image().split()
+#        return red_image, green_image, blue_image
 
 
-def make_red_part():
-    red_image = split_image()[0]
+def make_red_part(red_image=None):
     crop_coordinates_left_red = (int(red_image.width * 0.1), 0, red_image.width, red_image.height)
     crop_coordinates_middle_red = (int(red_image.width * 0.05), 0, int(red_image.width * 0.95), red_image.height)
     red_image_left = red_image.crop(crop_coordinates_left_red)
@@ -27,8 +35,7 @@ def make_red_part():
     return red_image_blended
 
 
-def make_blue_part():
-    blue_image = split_image()[2]
+def make_blue_part(blue_image=None):
     crop_coordinates_right_blue = (0, 0, int(blue_image.width * 0.9), blue_image.height)
     crop_coordinates_middle_blue = (int(blue_image.width * 0.05), 0, int(blue_image.width * 0.95), blue_image.height)
     blue_image_right = blue_image.crop(crop_coordinates_right_blue)
@@ -37,15 +44,16 @@ def make_blue_part():
     return blue_image_blended
 
 
-def make_green_part():
-    green_image = split_image()[1]
+def make_green_part(green_image=None):
     crop_coordinates_green = (int(green_image.width * 0.05), 0, int(green_image.width * 0.95), green_image.height)
     green_cropped = green_image.crop(crop_coordinates_green)
     return green_cropped
 
 
 def make_new_image():
-    new_image = Image.merge("RGB", (make_red_part(), make_green_part(), make_blue_part()))
+    image = prepare_image(filename="photo.jpg")
+    red_image, green_image, blue_image = image.split()
+    new_image = Image.merge("RGB", (make_red_part(red_image), make_green_part(green_image), make_blue_part(blue_image)))
     new_image.save("new_photo_blended.jpg")
     new_image.thumbnail((80, 80))
     new_image.save("new_photo_blended_small_size.jpg")
