@@ -20,12 +20,6 @@ def prepare_image(filename=None):
         return None
 
 
-#def split_image():
-#    if prepare_image():
-#        red_image, green_image, blue_image = prepare_image().split()
-#        return red_image, green_image, blue_image
-
-
 def make_red_part(red_image=None):
     crop_coordinates_left_red = (int(red_image.width * 0.1), 0, red_image.width, red_image.height)
     crop_coordinates_middle_red = (int(red_image.width * 0.05), 0, int(red_image.width * 0.95), red_image.height)
